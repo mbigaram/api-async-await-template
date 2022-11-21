@@ -11,69 +11,81 @@ export const EditarUsuario = (props) => {
   const [editar, setEditar] = useState(false)
 
 
-  const getDadosUsuario = () => {
-    axios
-      .get(
+  const getDadosUsuario = async() => {
+    try {
+      
+    const res = await axios.get(
         `https://us-central1-labenu-apis.cloudfunctions.net/labenusers/users/${props.id}`,
         {
           headers: {
-            Authorization: "ana-sammi-barbosa",
+            Authorization: "marcelo-bigaram-ammal",
           },
         }
       )
-      .then((res) => {
         setUsuario(res.data);
         setEmail(res.data.email);
         setName(res.data.name);
-      })
-      .catch((err) => {
-        console.log(err.response);
-      });
+    } catch (error) {
+      console.log(error.response);
+    }
+      // .then((res) => {
+      //   setUsuario(res.data);
+      //   setEmail(res.data.email);
+      //   setName(res.data.name);
+      // })
+      // .catch((err) => {
+      //   console.log(error.response);
+      // });
   };
 
   useEffect(() => {
     getDadosUsuario();
   }, []);
 
-  const editaUsuario = () => {
-    const body = {
+  const editaUsuario = async() => {
+    try {
+      const body = {
         name,
         email
       };
-      axios
-        .put(
+
+      await axios.put(
           `https://us-central1-labenu-apis.cloudfunctions.net/labenusers/users/${usuario.id}`,
           body,
           {
             headers: {
-              Authorization: "ana-sammi-barbosa"
+              Authorization: "marcelo-bigaram-ammal"
             }
           }
         )
-        .then(() => {
-          getDadosUsuario();
-          setEditar(!editar)
-        });
+        getDadosUsuario()
+        setEditar(!editar)
+      
+    } catch (error) {
+      console.log(error.response)
+    }
   }
+    
+        
 
-  const deletarUsuario = () => {
-    axios
+  const deletarUsuario = async () => {
+    try {
+    await axios
       .delete(
         `https://us-central1-labenu-apis.cloudfunctions.net/labenusers/users/${usuario.id}`,
         {
           headers: {
-            Authorization: "ana-sammi-barbosa"
+            Authorization: "marcelo-bigaram-ammal"
           }
         }
       )
-      .then(() => {
+  
         alert("usuario removido");
         // chama de novo o get usuarios pra atualizar a lista
         props.getUsuarios();
-      })
-      .catch((err) => {
+      } catch(err) {
         console.log(err.response);
-      });
+      };
   };
 
 
@@ -95,4 +107,4 @@ export const EditarUsuario = (props) => {
       )}
     </MainContainer>
   );
-};
+}

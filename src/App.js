@@ -16,47 +16,75 @@ function App() {
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [pesquisa, setPesquisa] = useState({ nome: "", email: "" });
-
+console.log(usuarios)
   useEffect(() => {
     getUsuarios();
   }, []);
 
-  const getUsuarios = () => {
-    axios
-      .get(
+//troca do .then/.catch para async/await
+
+  const getUsuarios = async () => {
+    try{
+      const res = await axios.get(
         "https://us-central1-labenu-apis.cloudfunctions.net/labenusers/users",
         {
           headers: {
-            Authorization: "ana-sammi-barbosa",
+            Authorization: "marcelo-bigaram-ammal",
           },
         }
       )
-      .then((res) => {
-        setUsuarios(res.data);
-      })
-      .catch((error) => {
-        console.log(error.response);
-      });
+      setUsuarios(res.data);
+
+    }catch (error) {
+      console.log(error.res)
+    }
+    
+      
+      // .then((res) => {
+      //   setUsuarios(res.data);
+      // })
+      // .catch((error) => {
+      //   console.log(error.response);
+      // });
   };
 
-  const pesquisaUsuario = (pesquisa) => {
-    axios
-      .get(
+
+  const pesquisaUsuario = async (pesquisa) => {
+    try {
+      const res = await axios.get(
         `https://us-central1-labenu-apis.cloudfunctions.net/labenusers/users/search?name=${pesquisa.nome}&email=${pesquisa.email}`,
         {
           headers: {
-            Authorization: "ana-sammi-barbosa",
-          },
+            Authorization: "marcelo-bigaram-ammal",
+          }
         }
       )
-      .then((res) => {
         setUsuarios(res.data);
         setPageFlow(3)
-      })
-      .catch((error) => {
-        console.log(error.response);
-      });
-  };
+      
+    } catch (error) {
+      console.log(error.response)
+    }
+  }
+
+  // const pesquisaUsuarioAntigo = (pesquisa) => {
+  //   axios
+  //     .get(
+  //       `https://us-central1-labenu-apis.cloudfunctions.net/labenusers/users/search?name=${pesquisa.nome}&email=${pesquisa.email}`,
+  //       {
+  //         headers: {
+  //           Authorization: "marcelo-bigaram-ammal",
+  //         },
+  //       }
+  //     )
+  //     .then((res) => {
+  //       setUsuarios(res.data);
+  //       setPageFlow(3)
+  //     })
+  //     .catch((error) => {
+  //       console.log(error.response);
+  //     });
+  // };
 
   const onChangeName = (e) => {
     setNome(e.target.value);
@@ -71,8 +99,11 @@ function App() {
       nome,
       email,
     };
+    //estado ainda é ""
+    //setar é desnecessario
     setPesquisa(novaPesquisa);
-    pesquisaUsuario(pesquisa);
+    //ainda não renderizou
+    pesquisaUsuario(novaPesquisa);
     setNome("")
     setEmail("")
     
